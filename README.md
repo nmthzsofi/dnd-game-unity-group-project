@@ -83,3 +83,52 @@ There is no need to collect any personal information from the user, only email a
 - React Native (Expo)
 - Supabase (auth and group logic handling, shared database with Unity)
 - Unity
+
+## Database
+
+### User:
+
+    - username (unique)
+    - email (primary)
+    - character
+    - current group (user can only be in one group at a time)
+
+### Group:
+
+    - group code (primary)
+    - group name
+    - created by <-> user
+    - status (lobby/playing/ended)
+
+### Characters
+
+    - Class
+    - Race
+    - User
+    - Skin
+
+### Class:
+
+    - name
+    - description
+    - actions
+    - base health ?
+
+### Race:
+
+    - name
+    - description
+    - image
+
+### Skins:
+
+    - name
+    - race
+    - image
+
+### Game events
+
+    - group
+    - user
+    - event type (action/dice)
+    - event effect
