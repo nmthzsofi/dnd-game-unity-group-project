@@ -10,6 +10,7 @@ export default function Play() {
   const [maxHealth, setMaxHealth] = useState(100);
   const [username, setUsername] = useState("");
   const [inGroup, setInGroup] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPlayerData();
@@ -27,11 +28,12 @@ export default function Play() {
     if (error) { console.log(error.message); return; }
 
     if (!data.current_group) {
-      router.replace("/(game)/join_group");
+      setLoading(false);
       return;
     }
 
     setInGroup(true);
+    setLoading(false);
     setUsername(data.username);
     const baseHealth = data.characters?.classes?.base_health ?? 100;
     setHealth(baseHealth);
@@ -51,7 +53,23 @@ export default function Play() {
     ? "#e6a817"
     : COLORS.danger;
 
-  if (!inGroup) return null;
+  if (loading) return (
+    <View style={styles.container}>
+      <Text style={{ color: COLORS.textMuted, textAlign: "center", marginTop: 40 }}>Loading...</Text>
+    </View>
+  );
+
+  if (!inGroup) return (
+    <View style={[styles.container, { justifyContent: "center", alignItems: "center", gap: 16 }]}>
+      <Text style={{ color: COLORS.textMuted, fontSize: 16, textAlign: "center" }}>
+        You are not in a group yet.
+      </Text>
+      <TouchableOpacity style={{ backgroundColor: COLORS.accent, paddingVertical: 12, paddingHorizontal: 32, borderRadius: 8 }}
+        onPress={() => router.push("/(game)/join_group")}>
+        <Text style={{ color: COLORS.background, fontWeight: "bold", fontSize: 16 }}>Join a Game</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={styles.container}>

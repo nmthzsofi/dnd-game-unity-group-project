@@ -17,6 +17,7 @@ export default function GameLayout() {
     >
       <Tabs.Screen name="play" options={{ title: "Play" }} />
       <Tabs.Screen name="character" options={{ title: "Character" }} />
+      <Tabs.Screen name="profile" options={{ title: "Profile" }} />
       <Tabs.Screen name="join_group" options={{ href: null }} />
       <Tabs.Screen name="create_group" options={{ href: null }} />
     </Tabs>
