@@ -1,6 +1,16 @@
+# DND Game - Unity Group Project
+
 Our project aims to provide a visual illustration for the DND game using unity and a react app.
 
 The application serves as the main control panen for the plane. This is where users can join groups, select the characters they want to be with and perform certain actions during the game.
+
+## How it works?
+
+Each user needs to download the application and create a profile. In the application users can configure their characters and join or create a group. When users join the group, the game starts. Everyone needs to show the picture of their character to the "Main Screen" which is used to display the game. As the users scan their characters, the characters appear on the main screen. Following the basic idea of DND the storiteller guides the storyline however they wish, but actions can be displayed on the main screen to elevate the experience. The applications can be also used to roll the dice, by showing the appropriate picture to the screen. This action will be also displayed. The Main Screen is also equiped with a health bar for every player as well as the enemy, so that the effect of actions are easier to track.
+
+## APPLICATION
+
+### Screens
 
 The application consists of 10 screens in total:
 
@@ -15,9 +25,11 @@ The application consists of 10 screens in total:
 9. Dice view
 10. Action view
 
+### Data collection
+
 There is no need to collect any personal information from the user, only email address for authentication purposes and user name to display during the game. Authentication is performed by a magic link.
 
-Detailed description of each page:
+### Detailed description of each page:
 
 1. Welcome
 
@@ -65,3 +77,9 @@ Detailed description of each page:
     - fight button
     - hide button
     - heal button
+
+## Tech stack:
+
+- React Native (Expo)
+- Supabase (auth and group logic handling, shared database with Unity)
+- Unity
