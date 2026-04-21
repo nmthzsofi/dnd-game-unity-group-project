@@ -36,6 +36,7 @@ export const INPUT = {
     color: COLORS.text,
     fontSize: 16,
   },
+  placeholderColor: "#5a5a7a",
 };
 
 export const BUTTON = {

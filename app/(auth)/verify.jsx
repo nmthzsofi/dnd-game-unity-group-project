@@ -1,39 +1,38 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { COLORS, TEXT, BUTTON, INPUT } from "../../constants/theme";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { COLORS, TEXT, BUTTON } from "../../constants/theme";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { supabase } from "../../lib/supabase";
 
-export default function Login() {
+export default function Verify() {
   const router = useRouter();
-  const [code, setCode] = useState("");
+  const { email } = useLocalSearchParams();
+
+  async function handleResend() {
+    const { error } = await supabase.auth.resend({
+      email,
+      type: "signup",
+    });
+
+    if (error) {
+      console.log(error.message);
+    }
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Verify your email address</Text>
+      <Text style={styles.title}>Check your email</Text>
       <Text style={TEXT.paragraph}>
-        We have sent you and email with a verification code. Please also check
-        your spam folder.
+        We sent a verification link to {email}. Click the link in the email to
+        confirm your account, then come back here.
       </Text>
-      <TextInput
-        placeholder="Code"
-        value={code}
-        style={INPUT.container}
-        onChangeText={(text) => setCode(text)}
-      />
       <TouchableOpacity
         style={BUTTON.primary.container}
-        onPress={() => router.push("/(auth)/verify")}
+        onPress={() => router.replace("/(game)/join_group")}
       >
-        <Text style={BUTTON.primary.label}>Verify</Text>
+        <Text style={BUTTON.primary.label}>I've verified my email</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={BUTTON.secondary.container}>
-        <Text style={BUTTON.secondary.label}>Resend Code</Text>
+      <TouchableOpacity style={BUTTON.secondary.container} onPress={handleResend}>
+        <Text style={BUTTON.secondary.label}>Resend Link</Text>
       </TouchableOpacity>
     </View>
   );
@@ -52,10 +51,5 @@ const styles = StyleSheet.create({
     ...TEXT.heading,
     fontSize: 40,
     marginBottom: 8,
-  },
-  buttons: {
-    width: "100%",
-    gap: 12,
-    marginTop: 16,
   },
 });
