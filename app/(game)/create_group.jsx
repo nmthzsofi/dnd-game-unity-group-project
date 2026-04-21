@@ -35,12 +35,15 @@ export default function CreateGroup() {
     if (userError) {
       console.log(userError.message);
     } else {
-      router.replace("/(game)/character");
+      router.replace("/(game)/play");
     }
   }
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+        <Text style={styles.closeText}>✕</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Create a Game</Text>
       <Text style={TEXT.paragraph}>Give your group a name and share the code with your party</Text>
       <TextInput
@@ -97,5 +100,14 @@ const styles = StyleSheet.create({
   regenerateText: {
     fontSize: 28,
     color: COLORS.textMuted,
+  },
+  closeButton: {
+    alignSelf: "flex-end",
+    padding: 4,
+    marginBottom: 8,
+  },
+  closeText: {
+    color: COLORS.textMuted,
+    fontSize: 20,
   },
 });

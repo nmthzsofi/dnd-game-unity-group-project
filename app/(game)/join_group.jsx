@@ -30,7 +30,7 @@ export default function JoinGroup() {
     if (error) {
       console.log(error.message);
     } else {
-      router.replace("/(game)/character");
+      router.replace("/(game)/play");
     }
   }
 

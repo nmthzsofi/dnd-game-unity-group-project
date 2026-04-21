@@ -7,6 +7,7 @@ export const COLORS = {
   textMuted: "#8888aa",
   danger: "#c0392b",
   border: "#2a2a4a",
+  healthGreen: "#4caf50",
 };
 
 export const TEXT = {

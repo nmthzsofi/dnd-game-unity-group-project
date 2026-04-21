@@ -15,10 +15,10 @@ export default function GameLayout() {
         tabBarInactiveTintColor: COLORS.textMuted,
       }}
     >
-      <Tabs.Screen name="join_group" options={{ title: "Play" }} />
+      <Tabs.Screen name="play" options={{ title: "Play" }} />
       <Tabs.Screen name="character" options={{ title: "Character" }} />
+      <Tabs.Screen name="join_group" options={{ href: null }} />
       <Tabs.Screen name="create_group" options={{ href: null }} />
-      <Tabs.Screen name="play" options={{ href: null }} />
     </Tabs>
   );
 }
