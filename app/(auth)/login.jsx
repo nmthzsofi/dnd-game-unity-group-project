@@ -15,9 +15,6 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => router.push("/(auth)/")}>
-        <Text style={BUTTON.secondary.label}>Back</Text>
-      </TouchableOpacity>
       <Text style={styles.title}>Log in</Text>
       <Text style={TEXT.paragraph}>Please enter your email address below</Text>
       <TextInput

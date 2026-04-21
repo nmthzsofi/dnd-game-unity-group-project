@@ -15,9 +15,6 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => router.push("/(auth)/")}>
-        <Text style={BUTTON.secondary.label}>Back</Text>
-      </TouchableOpacity>
       <Text style={styles.title}>Verify your email address</Text>
       <Text style={TEXT.paragraph}>
         We have sent you and email with a verification code. Please also check
