@@ -1,6 +1,8 @@
 {
   "expo": {
     "name": "app",
+    "scheme": "dndapp",                                                                                                       
+    "main": "expo-router/entry",
     "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
