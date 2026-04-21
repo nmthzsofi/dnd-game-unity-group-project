@@ -52,4 +52,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     gap: 20,
   },
+  title: {
+    ...TEXT.heading,
+    fontSize: 40,
+    marginBottom: 8,
+  },
+  buttons: {
+    width: "100%",
+    gap: 12,
+    marginTop: 16,
+  },
 });
