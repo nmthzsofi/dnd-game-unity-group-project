@@ -7,6 +7,22 @@ export default function Verify() {
   const router = useRouter();
   const { email } = useLocalSearchParams();
 
+  async function handleConfirm() {
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error || !data.user) {
+      console.log("Not logged in");
+      return;
+    }
+
+    if (!data.user.email_confirmed_at) {
+      console.log("Email not verified yet");
+      return;
+    }
+
+    router.replace("/(game)/join_group");
+  }
+
   async function handleResend() {
     const { error } = await supabase.auth.resend({
       email,
@@ -27,11 +43,14 @@ export default function Verify() {
       </Text>
       <TouchableOpacity
         style={BUTTON.primary.container}
-        onPress={() => router.replace("/(game)/join_group")}
+        onPress={handleConfirm}
       >
         <Text style={BUTTON.primary.label}>I've verified my email</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={BUTTON.secondary.container} onPress={handleResend}>
+      <TouchableOpacity
+        style={BUTTON.secondary.container}
+        onPress={handleResend}
+      >
         <Text style={BUTTON.secondary.label}>Resend Link</Text>
       </TouchableOpacity>
     </View>
