@@ -1,19 +1,27 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { COLORS, TEXT, BUTTON } from "../../constants/theme";
+import { useRouter } from "expo-router";
 
 export default function Welcome() {
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>⚔ DND Simulator</Text>
       <Text style={TEXT.paragraph}>
-        Join your party, choose your character, and let the adventure begin.
-        You will need a shared screen to display the game events.
+        Join your party, choose your character, and let the adventure begin. You
+        will need a shared screen to display the game events.
       </Text>
       <View style={styles.buttons}>
-        <TouchableOpacity style={BUTTON.primary.container}>
+        <TouchableOpacity
+          style={BUTTON.primary.container}
+          onPress={() => router.push("/(auth)/signup")}
+        >
           <Text style={BUTTON.primary.label}>Sign Up</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={BUTTON.secondary.container}>
+        <TouchableOpacity
+          style={BUTTON.secondary.container}
+          onPress={() => router.push("/(auth)/login")}
+        >
           <Text style={BUTTON.secondary.label}>I already have an account</Text>
         </TouchableOpacity>
       </View>
