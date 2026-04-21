@@ -6,6 +6,7 @@ export const COLORS = {
   text: "#e8e0d0",
   textMuted: "#8888aa",
   danger: "#c0392b",
+  border: "#2a2a4a",
 };
 
 export const TEXT = {

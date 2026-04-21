@@ -3,24 +3,13 @@ import { COLORS, TEXT, BUTTON } from "../../constants/theme";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { supabase } from "../../lib/supabase";
 
+
 export default function Verify() {
   const router = useRouter();
   const { email } = useLocalSearchParams();
 
-  async function handleConfirm() {
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error || !data.user) {
-      console.log("Not logged in");
-      return;
-    }
-
-    if (!data.user.email_confirmed_at) {
-      console.log("Email not verified yet");
-      return;
-    }
-
-    router.replace("/(game)/join_group");
+  function handleConfirm() {
+    router.replace("/(auth)/login");
   }
 
   async function handleResend() {
