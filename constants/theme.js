@@ -24,6 +24,20 @@ export const TEXT = {
   },
 };
 
+export const INPUT = {
+  container: {
+    width: "100%",
+    backgroundColor: COLORS.surface,
+    borderColor: COLORS.accent,
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    color: COLORS.text,
+    fontSize: 16,
+  },
+};
+
 export const BUTTON = {
   primary: {
     container: {
