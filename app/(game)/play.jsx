@@ -50,7 +50,6 @@ export default function Play() {
       .single();
 
     if (error) { console.log(error.message); setLoading(false); return; }
-
     if (!data.current_group) { setLoading(false); return; }
 
     setInGroup(true);
@@ -59,7 +58,6 @@ export default function Play() {
     const baseHealth = data.characters?.classes?.base_health ?? 100;
     setHealth(baseHealth);
     setMaxHealth(baseHealth);
-
     await fetchActions(data.characters?.class_id);
     setLoading(false);
   }
@@ -70,7 +68,6 @@ export default function Play() {
       .from("class_actions")
       .select("actions(id, name, icon_name, description)")
       .eq("class_id", classId);
-
     if (error) { console.log(error.message); return; }
     setActions(data.map((row) => row.actions));
   }
@@ -160,12 +157,7 @@ export default function Play() {
       </View>
 
       {/* Dice Sheet */}
-      <Modal
-        visible={rollVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setRollVisible(false)}
-      >
+      <Modal visible={rollVisible} transparent animationType="slide" onRequestClose={() => setRollVisible(false)}>
         <Pressable style={styles.modalOverlay} onPress={() => setRollVisible(false)} />
         <View style={styles.sheet}>
           <View style={styles.sheetHandle} />
@@ -177,11 +169,7 @@ export default function Play() {
           )}
           <View style={styles.diceGrid}>
             {DICE.map((die) => (
-              <TouchableOpacity
-                key={die.label}
-                style={styles.diceButton}
-                onPress={() => handleRoll(die)}
-              >
+              <TouchableOpacity key={die.label} style={styles.diceButton} onPress={() => handleRoll(die)}>
                 <Text style={styles.diceLabel}>{die.label}</Text>
                 <Text style={styles.diceSides}>1–{die.sides}</Text>
               </TouchableOpacity>
@@ -191,12 +179,7 @@ export default function Play() {
       </Modal>
 
       {/* Action Sheet */}
-      <Modal
-        visible={actVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setActVisible(false)}
-      >
+      <Modal visible={actVisible} transparent animationType="slide" onRequestClose={() => setActVisible(false)}>
         <Pressable style={styles.modalOverlay} onPress={() => setActVisible(false)} />
         <View style={styles.sheet}>
           <View style={styles.sheetHandle} />
@@ -343,9 +326,6 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 16,
   },
-  actionList: {
-    gap: 8,
-  },
   rollResult: {
     color: COLORS.text,
     fontSize: 20,
@@ -377,6 +357,9 @@ const styles = StyleSheet.create({
     color: COLORS.textMuted,
     fontSize: 12,
     marginTop: 2,
+  },
+  actionList: {
+    gap: 8,
   },
   actionItem: {
     backgroundColor: COLORS.background,
