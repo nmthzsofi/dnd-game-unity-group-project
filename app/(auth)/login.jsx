@@ -16,13 +16,24 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   async function handleLogin() {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
       console.log(error.message);
+      return;
+    }
+
+    const { data } = await supabase
+      .from("users")
+      .select("current_group")
+      .eq("id", authData.user.id)
+      .single();
+
+    if (data?.current_group) {
+      router.replace("/(game)/play");
     } else {
       router.replace("/(game)/join_group");
     }

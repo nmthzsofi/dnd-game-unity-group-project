@@ -76,12 +76,15 @@ export default function Character() {
 
     const { data: character, error: charError } = await supabase
       .from("characters")
-      .upsert({
-        user_id: user.id,
-        race_id: races[raceIndex].id,
-        class_id: classes[classIndex].id,
-        skin_id: skins[skinIndex].id,
-      })
+      .upsert(
+        {
+          user_id: user.id,
+          race_id: races[raceIndex].id,
+          class_id: classes[classIndex].id,
+          skin_id: skins[skinIndex].id,
+        },
+        { onConflict: "user_id" }
+      )
       .select()
       .single();
 
