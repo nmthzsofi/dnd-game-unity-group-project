@@ -3,6 +3,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { COLORS, TEXT, BUTTON } from "../../constants/theme";
@@ -24,6 +25,13 @@ function Selector({ label, value, onPrev, onNext }) {
     </View>
   );
 }
+
+const SKIN_IMAGES = {
+  elf:    require("../../assets/skins/elf.png"),
+  human:  require("../../assets/skins/human.png"),
+  dwarf:  require("../../assets/skins/dwarf.png"),
+  dragon: require("../../assets/skins/dragon.png"),
+};
 
 const RACE_CLASS_MAP = {
   Elf:   "Archer",
@@ -114,7 +122,15 @@ export default function Character() {
       <Text style={styles.title}>Design Your Character</Text>
 
       <View style={styles.preview}>
-        <Text style={styles.previewPlaceholder}>🧙</Text>
+        {SKIN_IMAGES[skins[skinIndex]?.image_key] ? (
+          <Image
+            source={SKIN_IMAGES[skins[skinIndex].image_key]}
+            style={styles.previewImage}
+            resizeMode="contain"
+          />
+        ) : (
+          <Text style={styles.previewPlaceholder}>🧙</Text>
+        )}
       </View>
 
       <View style={styles.selectors}>
@@ -165,6 +181,10 @@ const styles = StyleSheet.create({
   },
   previewPlaceholder: {
     fontSize: 80,
+  },
+  previewImage: {
+    width: "100%",
+    height: "100%",
   },
   selectors: {
     width: "100%",
