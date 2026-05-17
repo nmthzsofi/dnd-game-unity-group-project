@@ -185,13 +185,15 @@ create policy "events_insert" on public.game_events
 insert into public.races (name, description, image_key) values
   ('Elf',   'Swift and magical beings of the ancient forests.',   'elf'),
   ('Human', 'Versatile and ambitious, found across all lands.',   'human'),
-  ('Dwarf', 'Stout craftspeople forged in mountain strongholds.', 'dwarf');
+  ('Dwarf', 'Stout craftspeople forged in mountain strongholds.', 'dwarf'),
+  ('Enemy', 'The dungeon master, controller of all foes.',        'enemy');
 
--- Classes (auto-assigned by race: Elf→Archer, Dwarf→Sorcerer, Human→Assassin)
+-- Classes (auto-assigned by race: Elf→Archer, Dwarf→Sorcerer, Human→Assassin, Enemy→DungeonMaster)
 insert into public.classes (name, description, base_health) values
-  ('Archer',   'Swift and precise, strikes from afar.',              85),
-  ('Sorcerer', 'Powerful magic wielder, fragile but deadly.',        70),
-  ('Assassin', 'Stealthy and lethal, strikes from the shadows.',     90);
+  ('Archer',        'Swift and precise, strikes from afar.',              85),
+  ('Sorcerer',      'Powerful magic wielder, fragile but deadly.',        70),
+  ('Assassin',      'Stealthy and lethal, strikes from the shadows.',     90),
+  ('DungeonMaster', 'Master of the dungeon, commands all enemies.',      150);
 
 -- Actions (name = unique DB key sent to Unity, label = display name on screen)
 insert into public.actions (name, label, icon_name, description) values
@@ -205,10 +207,17 @@ insert into public.actions (name, label, icon_name, description) values
   ('assassin_defend', 'Defend', 'shield', 'Evade and roll out of harm''s way.'),
   ('assassin_die',    'Die',    'skull',  'Vanish — for good this time.');
 
+-- Actions (continued)
+insert into public.actions (name, label, icon_name, description) values
+  ('dm_fight',  'Fight',  'sword',  'Unleash the dungeon''s wrath.'),
+  ('dm_defend', 'Defend', 'shield', 'Fortify the dungeon''s defenses.'),
+  ('dm_die',    'Die',    'skull',  'The dungeon falls... for now.');
+
 -- Class → Actions
 insert into public.class_actions (class_id, action_id)
 select c.id, a.id from public.classes c, public.actions a
 where
-  (c.name = 'Archer'   and a.name in ('archer_fight',   'archer_defend',   'archer_die'))   or
-  (c.name = 'Sorcerer' and a.name in ('sorcerer_fight', 'sorcerer_defend', 'sorcerer_die')) or
-  (c.name = 'Assassin' and a.name in ('assassin_fight', 'assassin_defend', 'assassin_die'));
+  (c.name = 'Archer'        and a.name in ('archer_fight',   'archer_defend',   'archer_die'))   or
+  (c.name = 'Sorcerer'      and a.name in ('sorcerer_fight', 'sorcerer_defend', 'sorcerer_die')) or
+  (c.name = 'Assassin'      and a.name in ('assassin_fight', 'assassin_defend', 'assassin_die')) or
+  (c.name = 'DungeonMaster' and a.name in ('dm_fight',       'dm_defend',       'dm_die'));

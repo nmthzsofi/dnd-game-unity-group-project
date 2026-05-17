@@ -29,6 +29,7 @@ const RACE_CLASS_MAP = {
   Elf:   "Archer",
   Dwarf: "Sorcerer",
   Human: "Assassin",
+  "Dungeon Master": "DungeonMaster",
 };
 
 export default function Character() {
