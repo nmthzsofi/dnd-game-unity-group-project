@@ -77,7 +77,7 @@ export default function Play() {
       group_id: groupId,
       user_id: userId,
       event_type: "action",
-      event_effect: { action_id: action.id, action_name: action.name },
+      action_name: action.name,
     });
     setActVisible(false);
   }
@@ -89,7 +89,8 @@ export default function Play() {
       group_id: groupId,
       user_id: userId,
       event_type: "dice",
-      event_effect: { die: die.label, result },
+      die_type: die.label,
+      die_result: result,
     });
   }
 

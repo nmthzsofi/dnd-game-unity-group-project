@@ -111,12 +111,14 @@ create trigger on_auth_user_created
 -- GAME EVENTS
 -- ============================================================
 create table public.game_events (
-  id           uuid primary key default gen_random_uuid(),
-  group_id     char(6) not null references public.groups(group_code) on delete cascade,
-  user_id      uuid not null references auth.users(id),
-  event_type   text not null check (event_type in ('action', 'dice')),
-  event_effect jsonb not null default '{}',
-  created_at   timestamptz not null default now()
+  id          uuid primary key default gen_random_uuid(),
+  group_id    char(6) not null references public.groups(group_code) on delete cascade,
+  user_id     uuid not null references auth.users(id),
+  event_type  text not null check (event_type in ('action', 'dice')),
+  action_name text,
+  die_type    text,
+  die_result  integer,
+  created_at  timestamptz not null default now()
 );
 
 create index on public.game_events (group_id, created_at desc);
