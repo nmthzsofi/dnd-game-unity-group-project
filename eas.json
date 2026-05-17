@@ -14,8 +14,8 @@
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://ojkfvvifvpoikrqkczze.supabase.co",
-        "EXPO_PUBLIC_ANALYTICS_KEY": "sb_publishable_W5u97QFj0w3Fc8MKBDHHQQ_8u1fy8Uz"
+        "EXPO_PUBLIC_SUPABASE_URL": "https://ojkfvvifvpoikrqkczze.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_W5u97QFj0w3Fc8MKBDHHQQ_8u1fy8Uz"
       }
     }
   },
