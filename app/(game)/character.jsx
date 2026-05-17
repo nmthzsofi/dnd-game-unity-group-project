@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { Animated } from "react-native";
 import { COLORS, TEXT, BUTTON } from "../../constants/theme";
 import { supabase } from "../../lib/supabase";
 
@@ -47,6 +48,7 @@ export default function Character() {
   const [raceIndex, setRaceIndex] = useState(0);
   const [skinIndex, setSkinIndex] = useState(0);
   const [saved, setSaved] = useState(false);
+  const slideAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     fetchRaces();
@@ -74,6 +76,22 @@ export default function Character() {
 
   function cycle(index, setIndex, length, direction) {
     setIndex((index + direction + length) % length);
+  }
+
+  function cycleSkin(direction) {
+    Animated.timing(slideAnim, {
+      toValue: direction > 0 ? -300 : 300,
+      duration: 150,
+      useNativeDriver: true,
+    }).start(() => {
+      setSkinIndex((prev) => (prev + direction + skins.length) % skins.length);
+      slideAnim.setValue(direction > 0 ? 300 : -300);
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }).start();
+    });
   }
 
   async function handleSave() {
@@ -122,15 +140,17 @@ export default function Character() {
       <Text style={styles.title}>Design Your Character</Text>
 
       <View style={styles.preview}>
-        {SKIN_IMAGES[skins[skinIndex]?.image_key] ? (
-          <Image
-            source={SKIN_IMAGES[skins[skinIndex].image_key]}
-            style={styles.previewImage}
-            resizeMode="contain"
-          />
-        ) : (
-          <Text style={styles.previewPlaceholder}>🧙</Text>
-        )}
+        <Animated.View style={[styles.previewImage, { transform: [{ translateX: slideAnim }] }]}>
+          {SKIN_IMAGES[skins[skinIndex]?.image_key] ? (
+            <Image
+              source={SKIN_IMAGES[skins[skinIndex].image_key]}
+              style={styles.previewImage}
+              resizeMode="contain"
+            />
+          ) : (
+            <Text style={styles.previewPlaceholder}>🧙</Text>
+          )}
+        </Animated.View>
       </View>
 
       <View style={styles.selectors}>
@@ -143,8 +163,8 @@ export default function Character() {
         <Selector
           label="Skin"
           value={skins[skinIndex]?.name}
-          onPrev={() => cycle(skinIndex, setSkinIndex, skins.length, -1)}
-          onNext={() => cycle(skinIndex, setSkinIndex, skins.length, 1)}
+          onPrev={() => cycleSkin(-1)}
+          onNext={() => cycleSkin(1)}
         />
       </View>
 

@@ -1,10 +1,17 @@
 import {
   StyleSheet, Text, View, TouchableOpacity,
-  Modal, FlatList, Pressable,
+  Modal, FlatList, Pressable, Image,
 } from "react-native";
 import { useState, useCallback } from "react";
 import { useRouter, useFocusEffect } from "expo-router";
 import { COLORS } from "../../constants/theme";
+
+const SKIN_IMAGES = {
+  elf:    require("../../assets/skins/elf.png"),
+  human:  require("../../assets/skins/human.png"),
+  dwarf:  require("../../assets/skins/dwarf.png"),
+  dragon: require("../../assets/skins/dragon.png"),
+};
 import { supabase } from "../../lib/supabase";
 
 export default function Play() {
@@ -16,6 +23,7 @@ export default function Play() {
   const [loading, setLoading] = useState(true);
   const [groupId, setGroupId] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [skinImageKey, setSkinImageKey] = useState(null);
 
   const [actVisible, setActVisible] = useState(false);
   const [actions, setActions] = useState([]);
@@ -45,7 +53,7 @@ export default function Play() {
 
     const { data, error } = await supabase
       .from("users")
-      .select("username, current_group, characters(class_id, classes(base_health))")
+      .select("username, current_group, characters(class_id, classes(base_health), skins(image_key))")
       .eq("id", user.id)
       .single();
 
@@ -58,6 +66,7 @@ export default function Play() {
     const baseHealth = data.characters?.classes?.base_health ?? 100;
     setHealth(baseHealth);
     setMaxHealth(baseHealth);
+    setSkinImageKey(data.characters?.skins?.image_key ?? null);
     await fetchActions(data.characters?.class_id);
     setLoading(false);
   }
@@ -145,7 +154,11 @@ export default function Play() {
       </View>
 
       <View style={styles.characterArea}>
-        <Text style={styles.characterPlaceholder}>🧙</Text>
+        {SKIN_IMAGES[skinImageKey] ? (
+          <Image source={SKIN_IMAGES[skinImageKey]} style={styles.characterImage} resizeMode="contain" />
+        ) : (
+          <Text style={styles.characterPlaceholder}>🧙</Text>
+        )}
       </View>
 
       <View style={styles.buttonRow}>
@@ -264,6 +277,10 @@ const styles = StyleSheet.create({
   },
   characterPlaceholder: {
     fontSize: 100,
+  },
+  characterImage: {
+    width: "100%",
+    height: "100%",
   },
   buttonRow: {
     flexDirection: "row",

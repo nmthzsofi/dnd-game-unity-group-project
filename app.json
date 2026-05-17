@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "app",
-    "scheme": "dndapp",                                                                                                       
+    "name": "DND Unity Game",
+    "scheme": "dndapp",
     "main": "expo-router/entry",
-    "slug": "app",
+    "slug": "dnd-unity-game",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,6 +29,12 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2fd5b107-b912-4c75-afd9-7fe017637fe4"
+      }
+    }
   }
 }
