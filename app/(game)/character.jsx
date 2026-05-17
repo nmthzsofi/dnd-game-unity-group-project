@@ -25,18 +25,22 @@ function Selector({ label, value, onPrev, onNext }) {
   );
 }
 
+const RACE_CLASS_MAP = {
+  Elf:   "Archer",
+  Dwarf: "Sorcerer",
+  Human: "Assassin",
+};
+
 export default function Character() {
   const [races, setRaces] = useState([]);
-  const [classes, setClasses] = useState([]);
   const [skins, setSkins] = useState([]);
 
   const [raceIndex, setRaceIndex] = useState(0);
-  const [classIndex, setClassIndex] = useState(0);
   const [skinIndex, setSkinIndex] = useState(0);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     fetchRaces();
-    fetchClasses();
   }, []);
 
   useEffect(() => {
@@ -48,12 +52,6 @@ export default function Character() {
     const { data, error } = await supabase.from("races").select("*");
     if (error) console.log(error.message);
     else setRaces(data);
-  }
-
-  async function fetchClasses() {
-    const { data, error } = await supabase.from("classes").select("*");
-    if (error) console.log(error.message);
-    else setClasses(data);
   }
 
   async function fetchSkins(raceId) {
@@ -70,7 +68,17 @@ export default function Character() {
   }
 
   async function handleSave() {
-    if (!races.length || !classes.length || !skins.length) return;
+    if (!races.length || !skins.length) return;
+
+    const race = races[raceIndex];
+    const className = RACE_CLASS_MAP[race.name];
+
+    const { data: classData, error: classError } = await supabase
+      .from("classes")
+      .select("id")
+      .eq("name", className)
+      .single();
+    if (classError) { console.log(classError.message); return; }
 
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -79,8 +87,8 @@ export default function Character() {
       .upsert(
         {
           user_id: user.id,
-          race_id: races[raceIndex].id,
-          class_id: classes[classIndex].id,
+          race_id: race.id,
+          class_id: classData.id,
           skin_id: skins[skinIndex].id,
         },
         { onConflict: "user_id" }
@@ -95,8 +103,9 @@ export default function Character() {
       .update({ character_id: character.id })
       .eq("id", user.id);
 
-    if (error) console.log(error.message);
-    else console.log("Character saved!");
+    if (error) { console.log(error.message); return; }
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   }
 
   return (
@@ -115,12 +124,6 @@ export default function Character() {
           onNext={() => cycle(raceIndex, setRaceIndex, races.length, 1)}
         />
         <Selector
-          label="Class"
-          value={classes[classIndex]?.name}
-          onPrev={() => cycle(classIndex, setClassIndex, classes.length, -1)}
-          onNext={() => cycle(classIndex, setClassIndex, classes.length, 1)}
-        />
-        <Selector
           label="Skin"
           value={skins[skinIndex]?.name}
           onPrev={() => cycle(skinIndex, setSkinIndex, skins.length, -1)}
@@ -128,8 +131,8 @@ export default function Character() {
         />
       </View>
 
-      <TouchableOpacity style={[BUTTON.primary.container, styles.saveButton]} onPress={handleSave}>
-        <Text style={BUTTON.primary.label}>Save Character</Text>
+      <TouchableOpacity style={[BUTTON.primary.container, styles.saveButton, saved && styles.savedButton]} onPress={handleSave}>
+        <Text style={BUTTON.primary.label}>{saved ? "Saved!" : "Save Character"}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -201,5 +204,8 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     width: "100%",
+  },
+  savedButton: {
+    backgroundColor: COLORS.healthGreen,
   },
 });

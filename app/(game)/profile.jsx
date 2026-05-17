@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { COLORS, TEXT, BUTTON } from "../../constants/theme";
@@ -34,17 +34,21 @@ export default function Profile() {
   }
 
   async function handleDelete() {
-    const { data: { user } } = await supabase.auth.getUser();
-
-    const { error } = await supabase
-      .from("users")
-      .delete()
-      .eq("id", user.id);
-
-    if (error) { console.log(error.message); return; }
-
-    await supabase.auth.signOut();
-    router.replace("/(auth)/");
+    Alert.alert(
+      "Delete Profile",
+      "Are you sure? This cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete", style: "destructive", onPress: async () => {
+            const { error } = await supabase.rpc("delete_user");
+            if (error) { Alert.alert("Error", error.message); return; }
+            await supabase.auth.signOut();
+            router.replace("/(auth)/");
+          }
+        },
+      ]
+    );
   }
 
   return (

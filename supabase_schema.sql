@@ -28,7 +28,8 @@ create table public.classes (
 -- ============================================================
 create table public.actions (
   id          uuid primary key default gen_random_uuid(),
-  name        text not null unique,
+  name        text not null unique,  -- unique DB key, e.g. "warrior_fight"
+  label       text not null,         -- display name shown on screen, e.g. "Fight"
   icon_name   text not null,
   description text
 );
@@ -59,7 +60,7 @@ create table public.skins (
 create table public.groups (
   group_code  char(6) primary key,
   group_name  text not null,
-  created_by  uuid not null references auth.users(id),
+  created_by  uuid not null references auth.users(id) on delete cascade,
   status      text not null default 'lobby'
               check (status in ('lobby', 'playing', 'ended')),
   created_at  timestamptz not null default now()
@@ -113,7 +114,7 @@ create trigger on_auth_user_created
 create table public.game_events (
   id          uuid primary key default gen_random_uuid(),
   group_id    char(6) not null references public.groups(group_code) on delete cascade,
-  user_id     uuid not null references auth.users(id),
+  user_id     uuid not null references auth.users(id) on delete cascade,
   event_type  text not null check (event_type in ('action', 'dice')),
   action_name text,
   die_type    text,
@@ -186,28 +187,28 @@ insert into public.races (name, description, image_key) values
   ('Human', 'Versatile and ambitious, found across all lands.',   'human'),
   ('Dwarf', 'Stout craftspeople forged in mountain strongholds.', 'dwarf');
 
--- Classes
+-- Classes (auto-assigned by race: Elf→Archer, Dwarf→Sorcerer, Human→Assassin)
 insert into public.classes (name, description, base_health) values
-  ('Warrior', 'Heavy armor, melee combat specialist.',        120),
-  ('Mage',    'Arcane spellcaster, fragile but powerful.',    70),
-  ('Rogue',   'Swift and stealthy, strikes from shadows.',    90),
-  ('Cleric',  'Divine magic user, healer of the party.',      100);
+  ('Archer',   'Swift and precise, strikes from afar.',              85),
+  ('Sorcerer', 'Powerful magic wielder, fragile but deadly.',        70),
+  ('Assassin', 'Stealthy and lethal, strikes from the shadows.',     90);
 
--- Actions
-insert into public.actions (name, icon_name, description) values
-  ('Attack',   'sword',       'Strike an enemy with your weapon.'),
-  ('Fireball', 'flame',       'Hurl a blazing ball of fire.'),
-  ('Stealth',  'eye-off',     'Blend into the shadows.'),
-  ('Heal',     'heart-pulse', 'Restore health to yourself or an ally.'),
-  ('Shield',   'shield',      'Raise your defense this turn.'),
-  ('Backstab', 'zap',         'Devastating surprise attack.'),
-  ('Bless',    'sparkles',    'Grant divine favour to an ally.');
+-- Actions (name = unique DB key sent to Unity, label = display name on screen)
+insert into public.actions (name, label, icon_name, description) values
+  ('archer_fight',    'Fight',  'zap',    'Loose a precise arrow.'),
+  ('archer_defend',   'Defend', 'shield', 'Sidestep with elven grace.'),
+  ('archer_die',      'Die',    'skull',  'Fade away into the ancient forest.'),
+  ('sorcerer_fight',  'Fight',  'flame',  'Hurl a bolt of arcane energy.'),
+  ('sorcerer_defend', 'Defend', 'shield', 'Conjure a magical barrier.'),
+  ('sorcerer_die',    'Die',    'skull',  'Implode in a surge of wild magic.'),
+  ('assassin_fight',  'Fight',  'sword',  'Strike fast from the shadows.'),
+  ('assassin_defend', 'Defend', 'shield', 'Evade and roll out of harm''s way.'),
+  ('assassin_die',    'Die',    'skull',  'Vanish — for good this time.');
 
--- Class → Actions (add/remove rows here to change class abilities)
+-- Class → Actions
 insert into public.class_actions (class_id, action_id)
 select c.id, a.id from public.classes c, public.actions a
 where
-  (c.name = 'Warrior' and a.name in ('Attack', 'Shield')) or
-  (c.name = 'Mage'    and a.name in ('Fireball', 'Bless')) or
-  (c.name = 'Rogue'   and a.name in ('Attack', 'Stealth', 'Backstab')) or
-  (c.name = 'Cleric'  and a.name in ('Heal', 'Bless', 'Shield'));
+  (c.name = 'Archer'   and a.name in ('archer_fight',   'archer_defend',   'archer_die'))   or
+  (c.name = 'Sorcerer' and a.name in ('sorcerer_fight', 'sorcerer_defend', 'sorcerer_die')) or
+  (c.name = 'Assassin' and a.name in ('assassin_fight', 'assassin_defend', 'assassin_die'));

@@ -66,7 +66,7 @@ export default function Play() {
     if (!classId) return;
     const { data, error } = await supabase
       .from("class_actions")
-      .select("actions(id, name, icon_name, description)")
+      .select("actions(id, name, label, icon_name, description)")
       .eq("class_id", classId);
     if (error) { console.log(error.message); return; }
     setActions(data.map((row) => row.actions));
@@ -191,7 +191,7 @@ export default function Play() {
             contentContainerStyle={styles.actionList}
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.actionItem} onPress={() => handleAction(item)}>
-                <Text style={styles.actionName}>{item.name}</Text>
+                <Text style={styles.actionName}>{item.label}</Text>
                 <Text style={styles.actionDesc}>{item.description}</Text>
               </TouchableOpacity>
             )}
